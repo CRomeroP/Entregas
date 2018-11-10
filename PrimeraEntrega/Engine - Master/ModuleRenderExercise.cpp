@@ -2,6 +2,8 @@
 
 #include "ModuleRenderExercise.h"
 #include "ModuleWindow.h"
+#include "ModulePrograms.h"
+#include "ModuleCamera.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -22,6 +24,8 @@ bool ModuleRenderExercise::Init()
         0.0f,  1.0f, 0.0f,
 	};
 
+	model = float4x4::identity;
+
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
@@ -32,6 +36,13 @@ bool ModuleRenderExercise::Init()
 
 update_status ModuleRenderExercise::Update()
 {
+	glUseProgram(App->program->def_program);
+
+	glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
+
+
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(

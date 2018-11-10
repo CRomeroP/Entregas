@@ -23,8 +23,8 @@ bool ModuleCamera::Init()
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 1000.0f;
 
-	frustum.verticalFov = 90.0f;
-	frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*16.0f/9.0f);
+	//frustum.verticalFov = 90.0f;
+	//frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*16.0f/9.0f);
 
 	cameraPos = math::float3(0.0f, 30.0f, 80.0f);
 	cameraTarget = math::float3(0.0f, 0.0f, 0.0f);
