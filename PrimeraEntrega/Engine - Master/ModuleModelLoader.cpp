@@ -6,11 +6,6 @@
 
 #include "GL/glew.h"
 
-#include <assimp/scene.h>
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-
-
 
 ModuleModelLoader::ModuleModelLoader()
 {

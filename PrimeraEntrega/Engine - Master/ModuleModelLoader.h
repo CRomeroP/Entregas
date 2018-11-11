@@ -3,6 +3,12 @@
 
 #include "Module.h"
 #include "MathGeoLib.h"
+#include <assimp/scene.h>
+#include <assimp/cimport.h>
+#include <assimp/postprocess.h>
+
+
+struct SDL_Texture;
 
 class ModuleModelLoader :
 	public Module
@@ -14,10 +20,15 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
+	std::list<aiMesh*> meshList;
+	std::list<aiMaterial*> materialList;
+
+	SDL_Texture* texture0;
+
 private:
 
-	void            GenerateMeshData(const aiMesh* scene);
-	void            GenerateMaterialData(const aiMaterial* scene);
+	void            GenerateMeshData(aiMesh* scene);
+	void            GenerateMaterialData(aiMaterial* material);
 
 
 };
