@@ -3,6 +3,8 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
+#include "ModulePrograms.h"
+#include "ModuleModelLoader.h"
 #include "SDL.h"
 #include "GL/glew.h"
 
@@ -73,6 +75,49 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	for (unsigned i = 0; i < App->model->meshList.size(); ++i)
+	{
+		glUseProgram(App->program->def_program);
+
+		glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "model"), 1, GL_TRUE, &model[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "view"), 1, GL_TRUE, &App->camera->view[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(App->program->def_program, "proj"), 1, GL_TRUE, &App->camera->frustum.ProjectionMatrix()[0][0]);
+
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, App->model->materialList[App->model->meshList[i].mesh->mMaterialIndex]);
+		glUniform1i(glGetUniformLocation(App->program->def_program, "texture0"), 0);
+
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, App->model->meshList[i].vbo);
+		glVertexAttribPointer(
+			0,                  // attribute 0
+			3,                  // number of componentes (3 floats)
+			GL_FLOAT,           // data type
+			GL_FALSE,           // should be normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+		glVertexAttribPointer(
+			1,                  // attribute 0
+			2,                  // number of componentes (3 floats)
+			GL_FLOAT,           // data type
+			GL_FALSE,           // should be normalized?
+			0,                  // stride
+			(void*)(sizeof(float)*3*App->model->meshList[i].mesh->mNumVertices)// array buffer offset
+		);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->model->meshList[i].ibo);
+		glDrawElements(GL_TRIANGLES, App->model->meshList[i].mesh->mNumFaces * 3, GL_UNSIGNED_INT, nullptr);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glUseProgram(0);
+	}
 
 	return UPDATE_CONTINUE;
 }

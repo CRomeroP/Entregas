@@ -84,7 +84,12 @@ void ModuleModelLoader::GenerateMeshData(aiMesh* mesh)
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	meshList.push_back(mesh);
+	meshComplete meshComplete;
+	meshComplete.mesh = mesh;
+	meshComplete.vbo = vbo;
+	meshComplete.ibo = ibo;
+
+	meshList.push_back(meshComplete);
 }
 
 void ModuleModelLoader::GenerateMaterialData(aiMaterial * material)
@@ -98,5 +103,5 @@ void ModuleModelLoader::GenerateMaterialData(aiMaterial * material)
 		texture0 = App->textures->Load(source.data);
 	}
 
-	materialList.push_back(material);
+	materialList.push_back(texture0);
 }

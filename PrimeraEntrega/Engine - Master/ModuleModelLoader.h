@@ -7,7 +7,6 @@
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 
-
 struct SDL_Texture;
 
 class ModuleModelLoader :
@@ -20,17 +19,25 @@ public:
 	update_status   Update();
 	bool            CleanUp();
 
-	std::list<aiMesh*> meshList;
-	std::list<aiMaterial*> materialList;
-
-	SDL_Texture* texture0;
-
 private:
 
 	void            GenerateMeshData(aiMesh* scene);
 	void            GenerateMaterialData(aiMaterial* material);
 
 
+public:
+
+	struct meshComplete
+	{
+		aiMesh* mesh;
+		unsigned vbo;
+		unsigned ibo;
+	};
+
+	std::vector<meshComplete> meshList;
+	std::vector<unsigned> materialList;
+
+	unsigned texture0;
 };
 #endif
 
