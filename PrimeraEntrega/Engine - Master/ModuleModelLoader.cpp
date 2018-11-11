@@ -50,7 +50,7 @@ bool ModuleModelLoader::CleanUp()
 
 void ModuleModelLoader::GenerateMeshData(aiMesh* mesh) 
 {
-	unsigned int vbo;
+	unsigned vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
@@ -100,7 +100,7 @@ void ModuleModelLoader::GenerateMaterialData(aiMaterial * material)
 
 	if (material->GetTexture(aiTextureType_DIFFUSE, 0, &source, &map, &uvindex) == AI_SUCCESS)
 	{
-		texture0 = App->textures->Load(source.data);
+		texture0 = App->textures->loadImage(source.data);
 	}
 
 	materialList.push_back(texture0);

@@ -2,6 +2,10 @@
 #include<list>
 #include "Module.h"
 #include "Globals.h"
+#include "GL/glew.h"
+
+#include "DevIL\include\IL\il.h"
+#include "DevIL\include\IL\ilut.h"
 
 struct SDL_Texture;
 
@@ -14,8 +18,14 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	SDL_Texture* const Load(const char* path);
+	GLuint loadImage(const char* theFileName);
 
 private:
-	std::list<SDL_Texture*> textures;
+	ILuint imageID;				// Create an image ID as a ULuint
+
+	GLuint textureID;			// Create a texture ID as a GLuint
+
+	ILboolean success;			// Create a flag to keep track of success/failure
+
+	ILenum error;				// Create a flag to keep track of the IL error state
 };

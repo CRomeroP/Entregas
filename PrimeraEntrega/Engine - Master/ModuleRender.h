@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Math/float4x4.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -19,6 +20,7 @@ public:
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
 
-private:
+public:
+	math::float4x4 model;
 	void* context;
 };
