@@ -5,6 +5,7 @@
 #include "ModuleCamera.h"
 #include "ModulePrograms.h"
 #include "ModuleModelLoader.h"
+#include "ModuleImGui.h"
 #include "SDL.h"
 #include "GL/glew.h"
 
@@ -138,6 +139,8 @@ update_status ModuleRender::Update()
 
 update_status ModuleRender::PostUpdate()
 {
+
+	//App->imgui->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

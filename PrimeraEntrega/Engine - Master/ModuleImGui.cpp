@@ -3,6 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "GL/glew.h"
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
@@ -22,6 +23,7 @@ ModuleImGui::~ModuleImGui()
 
 bool ModuleImGui::Init()
 {
+	glewInit();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -66,20 +68,47 @@ update_status ModuleImGui::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+
+	ImGui::SetNextWindowPos({ 0,0 });
+	ImGui::SetNextWindowSize({ (float)App->window->width, (float)App->window->height });
+	ImGui::SetNextWindowBgAlpha(0.0f);
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImGui::Update()
 {
-	ImGui::Begin("Hello world");
-	ImGui::Text("Hello from another window!");
-	if (ImGui::Button("Close Me"));
-	ImGui::End();
+	
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImGui::PostUpdate()
 {
+	//SDL_GL_SwapWindow(App->window->window);
+	return UPDATE_CONTINUE;
+}
+
+bool ModuleImGui::CleanUp()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+	return true;
+}
+
+void ModuleImGui::Draw()
+{
+	ImGui::Begin("console");
+
+	ImGui::BeginMenuBar();
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.9f,0.45f,0.0f,0.7f });
+	if (ImGui::Button("Clear"))
+	{
+	}
+	ImGui::PopStyleColor();
+	ImGui::EndMenuBar();
+
+	ImGui::End();
+
 	ImGui::Render();
 	SDL_GL_MakeCurrent(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -92,14 +121,4 @@ update_status ModuleImGui::PostUpdate()
 	}
 
 	SDL_GL_MakeCurrent(App->window->window, App->renderer->context);
-	SDL_GL_SwapWindow(App->window->window);
-	return UPDATE_CONTINUE;
-}
-
-bool ModuleImGui::CleanUp()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-	return true;
 }

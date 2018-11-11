@@ -36,33 +36,35 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::Update()
 {
-	
-	float3 posAux = float3(0.0f, 0.0f, 0.0f);
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_LSHIFT]) {
-		cameraSpeed *= 2;
-	}
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_E]) {
-		posAux.y += cameraSpeed;
-	}
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_Q]) {
-		posAux.y -= cameraSpeed;
-	}
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_W]) {
-		posAux += frustum.front*cameraSpeed;
-	}
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_S]) {
-		posAux -= frustum.front*cameraSpeed;
-	}
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_A]) {
-		posAux -= frustum.WorldRight()*cameraSpeed;
-	}
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 
-	if (App->input->GetKey(NULL)[SDL_SCANCODE_D]) {
-		posAux += frustum.WorldRight()*cameraSpeed;
-	}
+		float3 posAux = float3(0.0f, 0.0f, 0.0f);
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_LSHIFT]) {
+			cameraSpeed *= 2;
+		}
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_E]) {
+			posAux.y += cameraSpeed;
+		}
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_Q]) {
+			posAux.y -= cameraSpeed;
+		}
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_W]) {
+			posAux += frustum.front*cameraSpeed;
+		}
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_S]) {
+			posAux -= frustum.front*cameraSpeed;
+		}
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_A]) {
+			posAux -= frustum.WorldRight()*cameraSpeed;
+		}
 
-	cameraPos += posAux;
-	cameraTarget += posAux;
+		if (App->input->GetKey(NULL)[SDL_SCANCODE_D]) {
+			posAux += frustum.WorldRight()*cameraSpeed;
+		}
+
+		cameraPos += posAux;
+		cameraTarget += posAux;
+	}
 
 
 	frustum.pos = cameraPos;
