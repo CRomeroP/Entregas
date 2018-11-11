@@ -17,46 +17,26 @@ bool ModuleCamera::Init()
 {
 	frustum.type = math::FrustumType::PerspectiveFrustum;
 
-	frustum.pos = { -10.0f,5.0f,7.0f };
+	frustum.pos = { 0.0f,5.0f,-10.0f };
 	frustum.front = { 0.0f,0.0f,-1.0f };
 	frustum.up = { 0.0f,1.0f,0.0f };
 
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 1000.0f;
 
-	//frustum.verticalFov = 90.0f;
-	//frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*16.0f/9.0f);
+	frustum.verticalFov = 90.0f;
+	frustum.horizontalFov = 2.f * Atan(Tan(frustum.verticalFov*0.5f)*16.0f/9.0f);
 
-	cameraPos = math::float3(0.0f, 30.0f, 80.0f);
+	cameraPos = math::float3(0.0f, 3.0f, 5.0f);
 	cameraTarget = math::float3(0.0f, 0.0f, 0.0f);
 	LookAt(view, frustum.pos, cameraTarget, frustum.up);
-	cameraSpeed = 2.0f;
+	cameraSpeed = 0.5f;
 	return true;
 }
 
 update_status ModuleCamera::Update()
 {
-	/*vec newPos(0, 0, 0);
-	float speed = cameraSpeed * dt;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed *= 2;
-	else if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		speed /= 2;
-
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
-
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += camera->frustum.front*speed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= camera->frustum.front*speed;
-
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camera->frustum.WorldRight()*speed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camera->frustum.WorldRight()*speed;
-
-	Position += newPos;
-	Reference += newPos;
-
-	Reference = Position - getMovementFactor();*/
+	
 	float3 posAux = float3(0.0f, 0.0f, 0.0f);
 	if (App->input->GetKey(NULL)[SDL_SCANCODE_LSHIFT]) {
 		cameraSpeed *= 2;
@@ -91,7 +71,7 @@ update_status ModuleCamera::Update()
 	Y = frustum.up;
 	X = frustum.WorldRight();
 	LookAt(view, frustum.pos, cameraTarget, frustum.up);
-	cameraSpeed = 2.0f;
+	cameraSpeed = 0.5f;
 	return UPDATE_CONTINUE;
 }
 
