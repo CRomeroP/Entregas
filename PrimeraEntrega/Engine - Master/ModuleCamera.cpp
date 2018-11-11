@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleCamera.h"
-
+#include "ModuleInput.h"
+#include "SDL/include/SDL.h"
 
 
 ModuleCamera::ModuleCamera()
@@ -29,11 +30,68 @@ bool ModuleCamera::Init()
 	cameraPos = math::float3(0.0f, 30.0f, 80.0f);
 	cameraTarget = math::float3(0.0f, 0.0f, 0.0f);
 	LookAt(view, frustum.pos, cameraTarget, frustum.up);
+	cameraSpeed = 2.0f;
 	return true;
 }
 
 update_status ModuleCamera::Update()
 {
+	/*vec newPos(0, 0, 0);
+	float speed = cameraSpeed * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+		speed *= 2;
+	else if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+		speed /= 2;
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += camera->frustum.front*speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= camera->frustum.front*speed;
+
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= camera->frustum.WorldRight()*speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += camera->frustum.WorldRight()*speed;
+
+	Position += newPos;
+	Reference += newPos;
+
+	Reference = Position - getMovementFactor();*/
+	float3 posAux = float3(0.0f, 0.0f, 0.0f);
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_LSHIFT]) {
+		cameraSpeed *= 2;
+	}
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_E]) {
+		posAux.y += cameraSpeed;
+	}
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_Q]) {
+		posAux.y -= cameraSpeed;
+	}
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_W]) {
+		posAux += frustum.front*cameraSpeed;
+	}
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_S]) {
+		posAux -= frustum.front*cameraSpeed;
+	}
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_A]) {
+		posAux -= frustum.WorldRight()*cameraSpeed;
+	}
+
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_D]) {
+		posAux += frustum.WorldRight()*cameraSpeed;
+	}
+
+	cameraPos += posAux;
+	cameraTarget += posAux;
+
+
+	frustum.pos = cameraPos;
+
+	Z = -frustum.front;
+	Y = frustum.up;
+	X = frustum.WorldRight();
+	LookAt(view, frustum.pos, cameraTarget, frustum.up);
+	cameraSpeed = 2.0f;
 	return UPDATE_CONTINUE;
 }
 
