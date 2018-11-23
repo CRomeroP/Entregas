@@ -36,7 +36,7 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::Update()
 {
-	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
 
 		float3 posAux = float3(0.0f, 0.0f, 0.0f);
 		if (App->input->GetKey(NULL)[SDL_SCANCODE_LSHIFT]) {
@@ -65,6 +65,11 @@ update_status ModuleCamera::Update()
 		cameraPos += posAux;
 		cameraTarget += posAux;
 	}
+	/*SDL_PollEvent(SDL_MOUSEMOTION);
+	if (App->input->GetKey(NULL)[SDL_SCANCODE_LALT] && SDL_BUTTON(SDL_BUTTON_LEFT))
+	{
+		frustum.pos = cameraPos = cameraTarget + getMovementFactor();
+	}*/
 
 
 	frustum.pos = cameraPos;
