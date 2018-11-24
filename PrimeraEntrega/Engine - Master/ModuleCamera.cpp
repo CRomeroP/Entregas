@@ -30,7 +30,7 @@ bool ModuleCamera::Init()
 	cameraPos = math::float3(0.0f, 3.0f, 5.0f);
 	cameraTarget = math::float3(0.0f, 0.0f, 0.0f);
 	LookAt(view, frustum.pos, cameraTarget, frustum.up);
-	cameraSpeed = 0.5f;
+	cameraSpeed = 0.1f;
 	return true;
 }
 

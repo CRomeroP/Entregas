@@ -8,6 +8,7 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl3.h"
+#include <SDL.h>
 
 
 
@@ -22,14 +23,14 @@ ModuleImGui::~ModuleImGui()
 }
 
 bool ModuleImGui::Init()
-{
-	glewInit();
+{	
+	//glewInit();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
-	ImGui_ImplOpenGL3_Init();
+	ImGui_ImplOpenGL3_Init("#version130");
 	return true;
 
 }
@@ -64,7 +65,7 @@ bool ModuleImGui::Start()
 }
 
 update_status ModuleImGui::PreUpdate()
-{
+{	
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
