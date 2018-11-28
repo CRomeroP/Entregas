@@ -23,4 +23,6 @@ public:
 public:
 	math::float4x4 model;
 	void* context;
+
+	unsigned int id = 0;
 };

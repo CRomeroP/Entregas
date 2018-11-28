@@ -16,6 +16,12 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+	void consoleDraw();
+	void hardwareDraw();
+	void configurationDraw();
 	void Draw();
+
+public:
+	bool active = true;
 };
 

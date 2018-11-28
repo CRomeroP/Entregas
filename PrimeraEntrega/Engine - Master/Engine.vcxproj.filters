@@ -64,6 +64,8 @@
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleImGui.cpp" />
+    <ClCompile Include="ModuleModelLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -163,6 +165,11 @@
     <ClInclude Include="ImGui\imgui_impl_opengl3.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleImGui.h" />
+    <ClInclude Include="ModuleModelLoader.h" />
+    <ClInclude Include="Brofiler\include\Brofiler.h">
+      <Filter>Brofile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -170,6 +177,9 @@
     </Filter>
     <Filter Include="ImGui\GL">
       <UniqueIdentifier>{54461853-52d2-49b3-addd-4212c4b1ba34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Brofile">
+      <UniqueIdentifier>{8e625c0a-b2ee-4ccd-b696-db2fb5c060c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

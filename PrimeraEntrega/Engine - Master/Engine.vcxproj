@@ -52,8 +52,8 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>.\SDL_image\libx86;.\SDL\lib\x86;.\ImGui;DevIL/lib/x86/Release;Assimp/lib/x86;./glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\SDL_image\libx86;.\SDL\lib\x86;.\ImGui;DevIL/lib/x86/Release;Assimp/lib/x86;./glew-2.1.0/lib/Release/Win32;./Brofiler/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ProfilerCore32.lib;EasyHook32.lib;assimp.lib;DevIL.lib;ILU.lib;ILUT.lib;glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Brofiler\include\Brofiler.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\GL\gl3w.h" />
     <ClInclude Include="ImGui\GL\glcorearb.h" />

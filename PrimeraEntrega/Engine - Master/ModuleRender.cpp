@@ -9,6 +9,9 @@
 #include "SDL.h"
 #include "GL/glew.h"
 
+#include "DevIL\include\IL\il.h"
+#include "DevIL\include\IL\ilut.h"
+
 ModuleRender::ModuleRender()
 {
 }
@@ -48,6 +51,26 @@ bool ModuleRender::Init()
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glEnable(GL_TEXTURE_2D);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Set texture interpolation method to use linear interpolation (no MIPMAPS)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 				// Type of texture
+		0,				// Pyramid level (for mip-mapping) - 0 is the top level
+		ilGetInteger(IL_IMAGE_FORMAT),	// Internal pixel format to use. Can be a generic type like GL_RGB or GL_RGBA, or a sized type
+		ilGetInteger(IL_IMAGE_WIDTH),	// Image width
+		ilGetInteger(IL_IMAGE_HEIGHT),	// Image height
+		0,				// Border width in pixels (can either be 1 or 0)
+		ilGetInteger(IL_IMAGE_FORMAT),	// Format of image pixel data
+		GL_UNSIGNED_BYTE,		// Image data type
+		ilGetData());
+	glBindTexture(GL_TEXTURE_2D, 0);
 
     int width, height;
     SDL_GetWindowSize(App->window->window, &width, &height);
@@ -133,7 +156,7 @@ update_status ModuleRender::Update()
 update_status ModuleRender::PostUpdate()
 {
 
-	//App->imgui->Draw();
+	App->imgui->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

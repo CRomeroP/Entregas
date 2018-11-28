@@ -43,11 +43,7 @@ bool ModuleWindow::Init()
 
 		flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
-		SDL_DisplayMode current;
-		SDL_GetCurrentDisplayMode(0, &current);
-		SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);
-		SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-		SDL_GL_SetSwapInterval(1);
+		window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 640, flags);
 
 		if(window == NULL)
 		{
