@@ -69,3 +69,27 @@ bool Application::CleanUp()
 
 	return ret;
 }
+
+const char* Application::getAppName() const
+{
+	return appName.c_str();
+}
+
+void Application::setAppName(const char * name)
+{
+	if (name != nullptr && name != appName)
+	{
+		appName = name;
+		SDL_SetWindowTitle(window->window, name);
+	}
+}
+
+int Application::getFramerateCap() const
+{
+	return framerateCap;
+}
+
+void Application::setFramerateCap(int cap)
+{
+	framerateCap = cap;
+}

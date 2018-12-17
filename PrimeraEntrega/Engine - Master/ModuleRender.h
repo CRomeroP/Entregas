@@ -24,5 +24,19 @@ public:
 	math::float4x4 model;
 	void* context;
 
+	bool vsync = false; 
+	bool Depth_Test = false;
+	bool Cull_Face = false;
+	bool Lighting = false;
+	bool Color_Material = false;
+	bool Texture_2D = false;
+	bool Wireframe = false;
+	bool Normals = false;
+	bool Faces = false;
+	bool ShowBB = false;
+	bool ShowQT = false;
+	bool Frustum_Culling = true;
+	bool ShowClickRay = false;
+
 	unsigned int id = 0;
 };

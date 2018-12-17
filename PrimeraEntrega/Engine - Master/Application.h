@@ -25,6 +25,14 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	const char * getAppName() const;
+
+	void setAppName(const char * name);
+
+	int getFramerateCap() const;
+
+	void setFramerateCap(int cap);
+
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
@@ -35,6 +43,10 @@ public:
 	ModulePrograms* program = nullptr;
 	ModuleModelLoader* model = nullptr;
 	ModuleImGui* imgui = nullptr;
+
+	std::string appName = "";
+
+	int framerateCap = 60;
 
 private:
 

@@ -66,6 +66,14 @@
     </ClCompile>
     <ClCompile Include="ModuleImGui.cpp" />
     <ClCompile Include="ModuleModelLoader.cpp" />
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConsole.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConfiguration.cpp" />
+    <ClCompile Include="PanelHardware.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -170,6 +178,20 @@
     <ClInclude Include="Brofiler\include\Brofiler.h">
       <Filter>Brofile</Filter>
     </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\nommgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConsole.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelConfiguration.h" />
+    <ClInclude Include="PanelHardware.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -181,5 +203,16 @@
     <Filter Include="Brofile">
       <UniqueIdentifier>{8e625c0a-b2ee-4ccd-b696-db2fb5c060c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mmgr">
+      <UniqueIdentifier>{90be140a-5336-4ae1-a7a4-bf6883e2a98c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{a9ff4958-1fa6-445c-8acc-b2a900e2027e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="mmgr\readme.txt">
+      <Filter>mmgr</Filter>
+    </Text>
   </ItemGroup>
 </Project>

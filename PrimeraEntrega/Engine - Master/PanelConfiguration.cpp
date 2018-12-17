@@ -1,239 +1,37 @@
-#include "Globals.h"
 #include "Application.h"
-#include "ModuleImGui.h"
-#include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "Globals.h"
+#include "ModuleWindow.h"
 #include "ModuleCamera.h"
-#include "Panel.h"
-#include "PanelConsole.h"
+#include "ModuleImGui.h"
 #include "PanelConfiguration.h"
-#include "PanelHardware.h"
-//#include "GL/glew.h"
+#include "ModuleInput.h"
+#include "MathGeoLib/include/MathGeoLib.h"
 #include "GL/gl3w.h"
-
-#include "ImGui\imgui.h"
-#include "ImGui\imgui_impl_sdl.h"
-#include "ImGui\imgui_impl_opengl3.h"
+//#include "ComponentCamera.h"
 
 #include "mmgr/mmgr.h"
 
-
-ModuleImGui::ModuleImGui()
+PanelConfiguration::PanelConfiguration(const char * name) : Panel(name),
+fps_log(FPS_LOG_SIZE), ms_log(FPS_LOG_SIZE), memory_log(MEMORY_LOG_SIZE),
+game_fps_log(FPS_LOG_SIZE), game_ms_log(FPS_LOG_SIZE)
 {
-}
+	resizable = true;
 
+	brightness = SDL_GetWindowBrightness(App->window->window);
 
-ModuleImGui::~ModuleImGui()
-{
-}
-
-bool ModuleImGui::Init()
-{	
-	gl3wInit();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
-	ImGui_ImplOpenGL3_Init();
-
-	panels.push_back(console = new PanelConsole("Console"));
-	panels.push_back(configuration = new PanelConfiguration("Configuration"));
-	panels.push_back(hardware = new PanelHardware("Hardware"));
-	return true;
-
-}
-
-bool ModuleImGui::Start()
-{
-	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = { 0.1f,0.1f,0.1f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_ScrollbarBg] = { 0.05f, 0.05f,0.05f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = { 0.05f, 0.05f,0.05f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = { 0.3f, 0.3f,0.3f,1.0f };
-
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_Tab] = { 0.7f,0.3f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_TabHovered] = { 0.8f,0.35f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_TabUnfocused] = { 0.5f,0.2f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_TabUnfocusedActive] = { 0.65f,0.25f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_TabActive] = { 0.9f,0.45f,0.0f,1.0f };
-
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_Header] = { 0.8f,0.37f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_HeaderActive] = { 1.0f,0.6f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_HeaderHovered] = { 0.95f,0.5f,0.0f,1.0f };
-
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_Button] = { 0.9f,0.45f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_ButtonActive] = { 0.8f,0.37f,0.0f,1.0f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_ButtonHovered] = { 0.95f,0.5f,0.0f,1.0f };
-
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBg] = { 1.0f,0.6f,0.0f,0.2f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgActive] = { 0.8f,0.37f,0.0f,0.5f };
-	ImGui::GetStyle().Colors[ImGuiCol_::ImGuiCol_FrameBgHovered] = { 0.95f,0.5f,0.0f,0.5f };
-
-	ImGui::GetStyle().WindowMinSize = { 125, 100 };
-	return true;
-}
-
-update_status ModuleImGui::PreUpdate()
-{	
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-
-	ImGui::SetNextWindowPos({ 0,0 });
-	ImGui::SetNextWindowSize({ (float)App->window->width, (float)App->window->height });
-	ImGui::SetNextWindowBgAlpha(0.0f);
-
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace", 0, window_flags);
-	ImGui::PopStyleVar(3);
-
-	//ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
-	//ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleImGui::Update()
-{
-	
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleImGui::PostUpdate()
-{
-	//SDL_GL_SwapWindow(App->window->window);
-	return UPDATE_CONTINUE;
-}
-
-bool ModuleImGui::CleanUp()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-	return true;
-}
-
-void ModuleImGui::Draw()
-{
-
-	float horizontalFactor = (float)App->window->width / SCREEN_WIDTH;
-	float verticalFactor = (float)App->window->height / SCREEN_HEIGHT;
-
-	ImGui::GetStyle().WindowMinSize = { 125 * horizontalFactor, 100 * verticalFactor };
-
-	if(init){
-	ImGui::SetWindowPos("Hardware", { 0 * horizontalFactor,646 * verticalFactor });
-	ImGui::SetWindowSize("Hardware", { 1083 * horizontalFactor, 118 * verticalFactor });
-
-	ImGui::SetWindowPos("Console", { 0 * horizontalFactor,810 * verticalFactor });
-	ImGui::SetWindowSize("Console", { 1292 * horizontalFactor, 140 * verticalFactor });
-
-	ImGui::SetWindowPos("Configuration", { 1291 * horizontalFactor,19 * verticalFactor });
-	ImGui::SetWindowSize("Configuration", { 290 * horizontalFactor, 468 * verticalFactor });
-
-	init = false;
-	}
-
-	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); it_p++)
-	{
-		if ((*it_p)->isActive())
-		{
-			ImGui::SetNextWindowSizeConstraints({ 10,10 }, { (float)App->window->width, (float)App->window->height });
-			(*it_p)->Draw();
-		}
-	}
-
-	ImGui::End();
-
-	ImGui::Render();
-	SDL_GL_MakeCurrent(App->window->window, App->renderer->context);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	// Update and Render additional Platform Windows
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
-
-	SDL_GL_MakeCurrent(App->window->window, App->renderer->context);
-
-}
-
-void ModuleImGui::consoleDraw()
-{
-	ImGui::Begin("Console", &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_MenuBar);
-
-	ImGui::BeginMenuBar();
-	ImGui::PushStyleColor(ImGuiCol_Button, { 0.9f,0.45f,0.0f,0.7f });
-	if (ImGui::Button("Clear"))
-	{
-	}
-	ImGui::PopStyleColor();
-	ImGui::EndMenuBar();
-
-	ImGui::End();
-}
-
-void ModuleImGui::hardwareDraw()
-{
-	ImGui::Begin("Hardware", &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_MenuBar);
-
-	ImGui::Text("CPUs:");
-	ImGui::SameLine();
-	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
-	ImGui::Text("%d (Cache: %dB)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-	ImGui::PopStyleColor();
-
-	ImGui::Text("System RAM:");
-	ImGui::SameLine();
-	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
-	ImGui::Text("%dGb", SDL_GetSystemRAM() / 1000);
-	ImGui::PopStyleColor();
-
-	ImGui::Text("Caps:");
-	ImGui::SameLine();
-	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
-	std::string caps;
-	if (SDL_Has3DNow())
-		caps += "3DNow!, ";
-	if (SDL_HasAVX())
-		caps += "AVX, ";
-	if (SDL_HasAVX2())
-		caps += "AVX2, ";
-	if (SDL_HasAltiVec())
-		caps += "AltiVec, ";
-	if (SDL_HasMMX())
-		caps += "MMX, ";
-	if (SDL_HasRDTSC())
-		caps += "RDTSC, ";
-	if (caps.size() > 5)
-		caps += "\n";
-	if (SDL_HasSSE())
-		caps += "SSE, ";
-	if (SDL_HasSSE2())
-		caps += "SSE2, ";
-	if (SDL_HasSSE3())
-		caps += "SSE3, ";
-	if (SDL_HasSSE41())
-		caps += "SSE41, ";
-	if (SDL_HasSSE42())
-		caps += "SSE42, ";
-	ImGui::Text(caps.c_str());
-	ImGui::PopStyleColor();
-
-	ImGui::End();
-}
-
-void ModuleImGui::configDraw() 
-{
 	SDL_GetDisplayMode(NULL, NULL, &mode);
-	ImGui::Begin("Configuration", &active, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_MenuBar);
+
+	active = true;
+}
+
+PanelConfiguration::~PanelConfiguration()
+{
+}
+
+void PanelConfiguration::Draw()
+{
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoFocusOnAppearing);
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -462,7 +260,31 @@ void ModuleImGui::configDraw()
 	ImGui::End();
 }
 
-void ModuleImGui::addMemory(float memory)
+void PanelConfiguration::addFPS(float fps, float ms)
+{
+	for (unsigned int i = 0; i < FPS_LOG_SIZE - 1; ++i)
+	{
+		fps_log[i] = fps_log[i + 1];
+		ms_log[i] = ms_log[i + 1];
+	}
+
+	fps_log[FPS_LOG_SIZE - 1] = fps;
+	ms_log[FPS_LOG_SIZE - 1] = ms;
+}
+
+void PanelConfiguration::addGameFPS(float fps, float ms)
+{
+	for (unsigned int i = 0; i < FPS_LOG_SIZE - 1; ++i)
+	{
+		game_fps_log[i] = game_fps_log[i + 1];
+		game_ms_log[i] = game_ms_log[i + 1];
+	}
+
+	game_fps_log[FPS_LOG_SIZE - 1] = fps;
+	game_ms_log[FPS_LOG_SIZE - 1] = ms;
+}
+
+void PanelConfiguration::addMemory(float memory)
 {
 	//memory /= 1000000;
 	for (unsigned int i = 0; i < MEMORY_LOG_SIZE - 1; ++i)
