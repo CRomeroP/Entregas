@@ -8,6 +8,7 @@
 #include "PanelConsole.h"
 #include "PanelConfiguration.h"
 #include "PanelHardware.h"
+#include "PanelGOTree.h"
 //#include "GL/glew.h"
 #include "GL/gl3w.h"
 
@@ -40,6 +41,7 @@ bool ModuleImGui::Init()
 	panels.push_back(console = new PanelConsole("Console"));
 	panels.push_back(configuration = new PanelConfiguration("Configuration"));
 	panels.push_back(hardware = new PanelHardware("Hardware"));
+	panels.push_back(GOTree = new PanelGOTree("GOTree"));
 	return true;
 
 }

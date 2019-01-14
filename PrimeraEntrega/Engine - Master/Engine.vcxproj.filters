@@ -74,6 +74,10 @@
     </ClCompile>
     <ClCompile Include="PanelConfiguration.cpp" />
     <ClCompile Include="PanelHardware.cpp" />
+    <ClCompile Include="PanelGOTree.cpp" />
+    <ClCompile Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.cpp">
+      <Filter>GameObject\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -192,6 +196,10 @@
     </ClInclude>
     <ClInclude Include="PanelConfiguration.h" />
     <ClInclude Include="PanelHardware.h" />
+    <ClInclude Include="PanelGOTree.h" />
+    <ClInclude Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.h">
+      <Filter>GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
@@ -208,6 +216,12 @@
     </Filter>
     <Filter Include="Panel">
       <UniqueIdentifier>{a9ff4958-1fa6-445c-8acc-b2a900e2027e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{524b2092-afe4-4921-8d99-93b59ec4f8fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Component">
+      <UniqueIdentifier>{57e29bf0-1006-40d7-afd3-b251a83fd71f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

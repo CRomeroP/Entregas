@@ -12,6 +12,7 @@ class Panel;
 class PanelConfiguration;
 class PanelConsole;
 class PanelHardware;
+class PanelGOTree;
 
 class ModuleImGui :
 	public Module
@@ -41,6 +42,7 @@ public:
 	PanelConsole* console = nullptr;
 	PanelConfiguration* configuration = nullptr;
 	PanelHardware* hardware = nullptr;
+	PanelGOTree* GOTree = nullptr;
 
 private:
 	std::vector<float> fps_log;
