@@ -4,9 +4,6 @@
 #include "Globals.h"
 #include "MathGeoLib.h"
 
-// C++ wrapper for JSON parser library "Parson"
-// http://www.w3schools.com/json/json_syntax.asp
-
 struct json_object_t;
 typedef struct json_object_t JSON_Object;
 

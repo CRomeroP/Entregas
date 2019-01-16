@@ -5,8 +5,6 @@
 
 #include "mmgr/mmgr.h"
 
-// C++ wrapper for JSON parser library "Parson"
-
 Config::Config()
 {
 	vroot = json_value_init_object();
