@@ -16,6 +16,8 @@ using namespace std;
 
 Application::Application()
 {
+
+	random = new math::LCG();
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(camera = new ModuleCamera());
@@ -96,4 +98,9 @@ int Application::getFramerateCap() const
 void Application::setFramerateCap(int cap)
 {
 	framerateCap = cap;
+}
+
+LCG & Application::Random()
+{
+	return *random;
 }

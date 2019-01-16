@@ -3,6 +3,7 @@
 #include<list>
 #include "Globals.h"
 #include "Module.h"
+#include "MathGeoLib/include/Algorithm/Random/LCG.h"
 
 class ModuleRender;
 class ModuleWindow;
@@ -35,7 +36,12 @@ public:
 
 	void setFramerateCap(int cap);
 
+	LCG& Random();
+
 public:
+
+	LCG* random = nullptr;
+
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleTextures* textures = nullptr;

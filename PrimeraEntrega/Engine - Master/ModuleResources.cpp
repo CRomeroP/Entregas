@@ -5,9 +5,9 @@
 #include "ModuleTextures.h"
 #include "Event.h"
 #include "ResourceTexture.h"
-//#include "ResourceMaterial.h"
+#include "ResourceMaterial.h"
 #include "ResourceMesh.h"
-//#include "ResourceModel.h"
+#include "ResourceModel.h"
 #include "Config.h"
 #include <string>
 
@@ -245,9 +245,9 @@ unsigned long long  ModuleResources::ImportFile(const char * new_file_in_assets,
 	return ret;
 }
 
-unsigned int ModuleResources::ImportTexture(const char* file_name, bool compressed, bool mipmaps, bool srgb)
+unsigned long long ModuleResources::ImportTexture(const char* file_name, bool compressed, bool mipmaps, bool srgb)
 {
-	unsigned int ret = 0;
+	unsigned long long ret = 0;
 	bool import_ok = false;
 	string written_file;
 
