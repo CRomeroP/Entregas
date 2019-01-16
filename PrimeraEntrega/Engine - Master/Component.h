@@ -56,7 +56,7 @@ public:
 	virtual void OnDebugDraw(bool selected) const {};
 
 public:
-	bool flag_for_removal = false;
+	bool removal = false;
 
 protected:
 	TypeComponent type = TypeComponent::Unknown;

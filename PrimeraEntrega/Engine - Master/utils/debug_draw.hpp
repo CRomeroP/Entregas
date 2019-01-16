@@ -291,6 +291,11 @@
     typedef const ddMat4x4 ddMat4x4_In;
     typedef       ddMat4x4 ddMat4x4_Out;
 
+	typedef math::float4x4 ddMat4x4;
+
+	typedef const ddMat4x4& ddMat4x4_In;
+	typedef       ddMat4x4& ddMat4x4_Out;
+
     #define DEBUG_DRAW_MAT4X4_TYPE_DEFINED 1
 #endif // DEBUG_DRAW_MAT4X4_TYPE_DEFINED
 

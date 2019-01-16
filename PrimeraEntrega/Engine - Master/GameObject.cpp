@@ -2,21 +2,16 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ModuleTextures.h"
-//#include "ModuleLevelManager.h"
+//#include "ModuleScene.h"
 #include "Component.h"
 #include "ComponentMaterial.h"
-//#include "ComponentAudioListener.h"
-//#include "ComponentAudioSource.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
-//#include "ComponentRigidBody.h"
-//#include "ComponentSteering.h"
-//#include "ComponentPath.h"
 #include "ResourceTexture.h"
 #include "ResourceMesh.h"
 #include "Config.h"
 #include "GL/glew.h"
-#include "DebugDraw.h"
+#include "utils/debug_draw.hpp"
 
 #include "mmgr/mmgr.h"
 
@@ -131,7 +126,7 @@ void GameObject::Load(Config * config, map<GameObject*, unsigned int>& relations
 	for (int i = 0; i < count; ++i)
 	{
 		Config component_conf(config->GetArray("Components", i));
-		Component::TypeComponent type = (Component::TypeComponent)component_conf.GetInt("Type", Component::Types::Unknown);
+		Component::TypeComponent type = (Component::TypeComponent)component_conf.GetInt("Type", Component::TypeComponent::Unknown);
 		if (type != Component::TypeComponent::Unknown)
 		{
 			Component* component = CreateComponent(type);
@@ -226,7 +221,7 @@ void GameObject::OnGoDestroyed()
 }
 
 // ---------------------------------------------------------
-uint GameObject::GetUID() const
+unsigned int GameObject::GetUID() const
 {
 	return uid;
 }
@@ -282,9 +277,9 @@ bool GameObject::RecursiveRemoveFlagged()
 }
 
 // ---------------------------------------------------------
-Component* GameObject::CreateComponent(Component::Types type)
+Component* GameObject::CreateComponent(Component::TypeComponent type)
 {
-	static_assert(Component::TypeComponent::Unknown == 9, "code needs update");
+	assert(Component::TypeComponent::Unknown == 9, "code needs update");
 
 	Component* ret = nullptr;
 

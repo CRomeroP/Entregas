@@ -1,0 +1,210 @@
+#include "Globals.h"
+#include "ComponentCamera.h"
+#include "Application.h"
+#include "GameObject.h"
+#include "ModuleLevelManager.h"
+#include "utils/debug_draw.hpp"
+
+// ---------------------------------------------------------
+ComponentCamera::ComponentCamera(GameObject* container) : Component(container, TypeComponent::Camera)
+{
+	frustum.type = FrustumType::PerspectiveFrustum;
+
+	frustum.pos = float3::zero;
+	frustum.front = float3::unitZ;
+	frustum.up = float3::unitY;
+
+	frustum.nearPlaneDistance = 100.0f;
+	frustum.farPlaneDistance = 10000.0f;
+	frustum.verticalFov = DEGTORAD * 60.0f;
+	SetAspectRatio(1.3f);
+
+	background = float4(0.1f, 0.1f, 0.1f, 1.0f);
+	projection_changed = true;
+}
+
+// ---------------------------------------------------------
+ComponentCamera::~ComponentCamera()
+{}
+
+// ---------------------------------------------------------
+void ComponentCamera::OnStart()
+{
+	if (looking_at_uid != 0)
+		looking_at = App->level->Find(looking_at_uid);
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::OnUpdate(float dt)
+{
+	if (looking_at != nullptr)
+		Look(looking_at->GetGlobalPosition());
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::OnDebugDraw(bool selected) const
+{
+	if (selected == true)
+	{
+		float4x4 matrix = GetOpenGLProjectionMatrix()*GetOpenGLViewMatrix();
+		matrix.Inverse();
+		dd::frustum(matrix, dd::colors::Yellow);
+	}
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::OnSave(Config& config) const
+{
+	config.AddUInt("Looking At", (looking_at) ? looking_at->GetUID() : 0);
+	config.AddArrayFloat("Background", (float*)&background, 4);
+	config.AddArrayFloat("Frustum", (float*)&frustum.pos.x, 13);
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::OnLoad(Config * config)
+{
+	unsigned int looking_at_uid = config->GetUInt("Looking At", 0);
+
+	background.x = config->GetFloat("Background", 0.1f, 0);
+	background.y = config->GetFloat("Background", 0.1f, 1);
+	background.z = config->GetFloat("Background", 0.1f, 2);
+	background.w = config->GetFloat("Background", 1.f, 3);
+
+	frustum.pos.x = config->GetFloat("Frustum", 0.f, 0);
+	frustum.pos.y = config->GetFloat("Frustum", 0.f, 1);
+	frustum.pos.z = config->GetFloat("Frustum", 0.f, 2);
+
+	frustum.front.x = config->GetFloat("Frustum", 0.f, 3);
+	frustum.front.y = config->GetFloat("Frustum", 0.f, 4);
+	frustum.front.z = config->GetFloat("Frustum", 1.f, 5);
+
+	frustum.up.x = config->GetFloat("Frustum", 0.f, 6);
+	frustum.up.y = config->GetFloat("Frustum", 1.f, 7);
+	frustum.up.z = config->GetFloat("Frustum", 0.f, 8);
+
+	frustum.nearPlaneDistance = config->GetFloat("Frustum", 100.0f, 9);
+	frustum.farPlaneDistance = config->GetFloat("Frustum", 10000.f, 10);
+
+	frustum.horizontalFov = config->GetFloat("Frustum", 1.f, 11);
+	frustum.verticalFov = config->GetFloat("Frustum", 1.f, 12);
+
+	projection_changed = true;
+}
+
+// -----------------------------------------------------------------
+void ComponentCamera::OnUpdateTransform()
+{
+	float4x4 trans = game_object->GetGlobalTransformation();
+
+	frustum.pos = trans.TranslatePart();
+	frustum.front = trans.WorldZ();
+	frustum.up = trans.WorldY();
+}
+
+// ---------------------------------------------------------
+float ComponentCamera::GetNearPlaneDist() const
+{
+	return frustum.nearPlaneDistance;
+}
+
+// ---------------------------------------------------------
+float ComponentCamera::GetFarPlaneDist() const
+{
+	return frustum.farPlaneDistance;
+}
+
+// ---------------------------------------------------------
+float ComponentCamera::GetFOV() const
+{
+	return frustum.verticalFov * RADTODEG;
+}
+
+// ---------------------------------------------------------
+float ComponentCamera::GetAspectRatio() const
+{
+	return frustum.AspectRatio();
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::SetNearPlaneDist(float dist)
+{
+	if (dist > 0.0f && dist < frustum.farPlaneDistance)
+	{
+		frustum.nearPlaneDistance = dist;
+		projection_changed = true;
+	}
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::SetFarPlaneDist(float dist)
+{
+	if (dist > 0.0f && dist > frustum.nearPlaneDistance)
+	{
+		frustum.farPlaneDistance = dist;
+		projection_changed = true;
+	}
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::SetFOV(float fov)
+{
+	float aspect_ratio = frustum.AspectRatio();
+
+	frustum.verticalFov = DEGTORAD * fov;
+	SetAspectRatio(aspect_ratio);
+}
+
+// ---------------------------------------------------------
+void ComponentCamera::SetAspectRatio(float aspect_ratio)
+{
+
+	// fieldOfViewX = 2 * atan(tan(fieldOfViewY * 0.5) * aspect)
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
+	projection_changed = true;
+}
+
+// -----------------------------------------------------------------
+void ComponentCamera::Look(const float3& position)
+{
+	float3 dir = position - frustum.pos;
+
+	float3x3 m = float3x3::LookAt(frustum.front, dir.Normalized(), frustum.up, float3::unitY);
+
+	frustum.front = m.MulDir(frustum.front).Normalized();
+	frustum.up = m.MulDir(frustum.up).Normalized();
+}
+
+// -----------------------------------------------------------------
+float4x4 ComponentCamera::GetOpenGLViewMatrix() const
+{
+	float4x4 m;
+
+	m = frustum.ViewMatrix();
+	m.Transpose();
+
+	return m;
+}
+
+// -----------------------------------------------------------------
+float4x4 ComponentCamera::GetOpenGLProjectionMatrix() const
+{
+	float4x4 m;
+
+	m = frustum.ProjectionMatrix();
+	m.Transpose();
+
+	return m;
+}
+
+// -----------------------------------------------------------------
+float4x4 ComponentCamera::GetViewMatrix() const
+{
+	return frustum.ViewMatrix();
+}
+
+// -----------------------------------------------------------------
+float4x4 ComponentCamera::GetProjectionMatrix() const
+{
+	return frustum.ProjectionMatrix();
+}
+
