@@ -42,7 +42,6 @@ bool ModuleResources::Init(Config* config)
 
 bool ModuleResources::Start(Config * config)
 {
-	
 	checkers = (ResourceTexture*)CreateNewResource(Resource::Type::texture, 2);
 	App->tex->LoadCheckers(checkers);
 	checkers->loaded = 1;

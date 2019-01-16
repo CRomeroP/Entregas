@@ -2,9 +2,11 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
+#include "SDL_filesystem.h"
+#include "SDL_rwops.h"
 #include "PhysFS/include/physfs.h"
-#include "Assimp/include/cfileio.h"
-#include "Assimp/include/types.h"
+#include "Assimp/include/assimp/cfileio.h"
+#include "Assimp/include/assimp/types.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
@@ -36,12 +38,12 @@ ModuleFileSystem::ModuleFileSystem(const char* game_path) : Module("File System"
 	// Make sure standard paths exist
 	const char* dirs[] = {
 		SETTINGS_FOLDER, ASSETS_FOLDER, LIBRARY_FOLDER,
-		LIBRARY_AUDIO_FOLDER, LIBRARY_MESH_FOLDER,
+		LIBRARY_MESH_FOLDER,
 		LIBRARY_MATERIAL_FOLDER, LIBRARY_SCENE_FOLDER, LIBRARY_MODEL_FOLDER,
-		LIBRARY_TEXTURES_FOLDER, LIBRARY_ANIMATION_FOLDER
+		LIBRARY_TEXTURES_FOLDER
 	};
 
-	for (uint i = 0; i < sizeof(dirs) / sizeof(const char*); ++i)
+	for (unsigned int i = 0; i < sizeof(dirs) / sizeof(const char*); ++i)
 	{
 		if (PHYSFS_exists(dirs[i]) == 0)
 			PHYSFS_mkdir(dirs[i]);
@@ -92,7 +94,7 @@ bool ModuleFileSystem::AddPath(const char* path_or_zip)
 {
 	bool ret = false;
 
-	if (PHYSFS_mount(path_or_zip, nullptr, 1) == 0)
+	if (PHYSFS_mount(path_or_zip, nullptr, 1) == 0) 
 		LOG("File System error while adding a path or zip: %s\n", PHYSFS_getLastError());
 	else
 		ret = true;
@@ -260,9 +262,9 @@ unsigned int ModuleFileSystem::Load(const char * path, const char * file, char *
 }
 
 // Read a whole file and put it in a new buffer
-uint ModuleFileSystem::Load(const char* file, char** buffer) const
+unsigned int ModuleFileSystem::Load(const char* file, char** buffer) const
 {
-	uint ret = 0;
+	unsigned int ret = 0;
 
 	PHYSFS_file* fs_file = PHYSFS_openRead(file);
 
@@ -273,7 +275,7 @@ uint ModuleFileSystem::Load(const char* file, char** buffer) const
 		if (size > 0)
 		{
 			*buffer = new char[size];
-			uint readed = (uint)PHYSFS_read(fs_file, *buffer, 1, size);
+			unsigned int readed = (unsigned int)PHYSFS_read(fs_file, *buffer, 1, size);
 			if (readed != size)
 			{
 				LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
@@ -328,7 +330,7 @@ int close_sdl_rwops(SDL_RWops *rw)
 }
 
 // Save a whole buffer to disk
-uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int size, bool append) const
+unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int size, bool append) const
 {
 	unsigned int ret = 0;
 
@@ -337,7 +339,7 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 
 	if (fs_file != nullptr)
 	{
-		uint written = (uint)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
+		unsigned int written = (unsigned int)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
 		if (written != size)
 			LOG("File System error while writing to file %s: %s", file, PHYSFS_getLastError());
 		else
@@ -361,7 +363,7 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 	return ret;
 }
 
-bool ModuleFileSystem::SaveUnique(string& name, const void * buffer, uint size, const char * path, const char * prefix, const char * extension)
+bool ModuleFileSystem::SaveUnique(string& name, const void * buffer, unsigned int size, const char * path, const char * prefix, const char * extension)
 {
 	char result[250];
 
@@ -546,13 +548,13 @@ void CALLBACK BassClose(void* file)
 		LOG("File System error while CLOSE via bass: %s", PHYSFS_getLastError());
 }
 
-QWORD CALLBACK BassLength(void* file)
+__int64 CALLBACK BassLength(void* file)
 {
 	PHYSFS_sint64 ret = PHYSFS_fileLength((PHYSFS_File*)file);
 	if (ret == -1)
 		LOG("File System error while SIZE via bass: %s", PHYSFS_getLastError());
 
-	return (QWORD)ret;
+	return (__int64)ret;
 }
 
 DWORD CALLBACK BassRead(void *buffer, DWORD len, void* file)
@@ -564,7 +566,7 @@ DWORD CALLBACK BassRead(void *buffer, DWORD len, void* file)
 	return (DWORD)ret;
 }
 
-BOOL CALLBACK BassSeek(QWORD offset, void* file)
+BOOL CALLBACK BassSeek(__int64 offset, void* file)
 {
 	int res = PHYSFS_seek((PHYSFS_File*)file, offset);
 	if (res == 0)
