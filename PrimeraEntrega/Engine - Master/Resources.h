@@ -17,12 +17,12 @@ public:
 		material,
 		texture,
 		mesh,
-		other
+		unkown
 	
 	};
 
 public:
-	Resource(unsigned int long long uid, Resource::Type type);
+	Resource(unsigned long long uid, Resource::Type type);
 	virtual ~Resource();
 
 	Resource::Type      GetType() const;
@@ -55,7 +55,7 @@ protected:
 	std::string exported_file;
 	std::string user_name;
 
-	Type type = other;
+	Type type = unkown;
 	unsigned int loaded = 0;
 };
 

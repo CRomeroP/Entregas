@@ -14,6 +14,7 @@ class ModulePrograms;
 class ModuleModelLoader;
 class ModuleImGui;
 class ModuleFileSystem;
+class ModuleResources;
 
 class Application
 {
@@ -45,6 +46,7 @@ public:
 	ModuleModelLoader* model = nullptr;
 	ModuleImGui* imgui = nullptr;
 	ModuleFileSystem* fs = nullptr;
+	ModuleResources* resources = nullptr;
 
 	std::string appName = "";
 

@@ -10,6 +10,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleImGui.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResources.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ Application::Application()
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(fs = new ModuleFileSystem());
+	modules.push_back(resources = new ModuleResources());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(model = new ModuleModelLoader());
