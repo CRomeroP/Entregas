@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
+#include "HashString.h"
 
 #include "GL/glew.h"
 

@@ -43,14 +43,14 @@ bool ModuleResources::Init(Config* config)
 bool ModuleResources::Start(Config * config)
 {
 	checkers = (ResourceTexture*)CreateNewResource(Resource::Type::texture, 2);
-	App->tex->LoadCheckers(checkers);
+	App->textures->LoadCheckers(checkers);
 	checkers->loaded = 1;
 
 	white_fallback = new ResourceTexture(0);
 	black_fallback = new ResourceTexture(0);
 
-	App->tex->LoadFallback(white_fallback, float3(1.0f));
-	App->tex->LoadFallback(black_fallback, float3(0.0f));
+	App->textures->LoadFallback(white_fallback, float3(1.0f));
+	App->textures->LoadFallback(black_fallback, float3(0.0f));
 
 	return true;
 }
@@ -62,7 +62,7 @@ bool ModuleResources::CleanUp()
 
 	SaveResources();
 
-	for (map<UID, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
+	for (map<unsigned long long, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 		RELEASE(it->second);
 
 	for (vector<Resource*>::iterator it = removed.begin(); it != removed.end(); ++it)
@@ -99,7 +99,7 @@ void ModuleResources::SaveResources() const
 	// Serialize GameObjects recursively
 	save.AddArray("Resources");
 
-	for (map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
+	for (map<unsigned long long, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		if (it->first > RESERVED_RESOURCES)
 		{
@@ -111,7 +111,7 @@ void ModuleResources::SaveResources() const
 
 	// Finally save to file
 	char* buf = nullptr;
-	uint size = save.Save(&buf, "Resources setup from the EDU Engine");
+	unsigned int size = save.Save(&buf, "Resources setup from the EDU Engine");
 	App->fs->Save(SETTINGS_FOLDER "resources.json", buf, size);
 	RELEASE_ARRAY(buf);
 }
@@ -119,7 +119,7 @@ void ModuleResources::SaveResources() const
 void ModuleResources::LoadResources()
 {
 	char* buffer = nullptr;
-	uint size = App->fs->Load(SETTINGS_FOLDER "resources.json", &buffer);
+	unsigned int size = App->fs->Load(SETTINGS_FOLDER "resources.json", &buffer);
 
 	if (buffer != nullptr && size > 0)
 	{
@@ -133,7 +133,7 @@ void ModuleResources::LoadResources()
 		{
 			Config resource(config.GetArray("Resources", i));
 			Resource::Type type = (Resource::Type) resource.GetInt("Type");
-			UID uid = resource.GetUID("UID");
+			unsigned long long uid = resource.GetUID("UID");
 
 			if (Get(uid) != nullptr)
 			{
@@ -154,11 +154,8 @@ Resource::Type ModuleResources::TypeFromExtension(const char * extension) const
 
 	if (extension != nullptr)
 	{
-		if (_stricmp(extension, "wav") == 0)
-			ret = Resource::audio;
-		else if (_stricmp(extension, "ogg") == 0)
-			ret = Resource::audio;
-		else if (_stricmp(extension, "dds") == 0)
+		
+		if (_stricmp(extension, "dds") == 0)
 			ret = Resource::texture;
 		else if (_stricmp(extension, "png") == 0)
 			ret = Resource::texture;
@@ -177,12 +174,12 @@ Resource::Type ModuleResources::TypeFromExtension(const char * extension) const
 	return ret;
 }
 
-UID ModuleResources::Find(const char * file_in_assets) const
+unsigned long long ModuleResources::Find(const char * file_in_assets) const
 {
 	string file(file_in_assets);
 	App->fs->NormalizePath(file);
 
-	for (map<UID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
+	for (map<unsigned long long, Resource*>::const_iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		if (it->second->file.compare(file) == 0)
 			return it->first;
@@ -190,9 +187,9 @@ UID ModuleResources::Find(const char * file_in_assets) const
 	return 0;
 }
 
-UID ModuleResources::ImportFileOutsideVFM(const char * full_path)
+unsigned long long ModuleResources::ImportFileOutsideVFM(const char * full_path)
 {
-	UID ret = 0;
+	unsigned long long ret = 0;
 
 	string final_path;
 
@@ -205,9 +202,9 @@ UID ModuleResources::ImportFileOutsideVFM(const char * full_path)
 	return ret;
 }
 
-UID ModuleResources::ImportFile(const char * new_file_in_assets, bool force)
+unsigned long long  ModuleResources::ImportFile(const char * new_file_in_assets, bool force)
 {
-	UID ret = 0;
+	unsigned long long ret = 0;
 
 	// Check is that file has been already exported
 	if (force == true)
@@ -230,10 +227,7 @@ UID ModuleResources::ImportFile(const char * new_file_in_assets, bool force)
 	switch (type)
 	{
 	case Resource::texture:
-		import_ok = App->tex->Import(new_file_in_assets, "", written_file, true);
-		break;
-	case Resource::audio:
-		import_ok = App->audio->Import(new_file_in_assets, written_file);
+		import_ok = App->textures->Import(new_file_in_assets, "", written_file, true);
 		break;
 	case Resource::model:
 		import_ok = ResourceModel::Import(new_file_in_assets, written_file);
@@ -251,9 +245,9 @@ UID ModuleResources::ImportFile(const char * new_file_in_assets, bool force)
 	return ret;
 }
 
-UID ModuleResources::ImportTexture(const char* file_name, bool compressed, bool mipmaps, bool srgb)
+unsigned int ModuleResources::ImportTexture(const char* file_name, bool compressed, bool mipmaps, bool srgb)
 {
-	UID ret = 0;
+	unsigned int ret = 0;
 	bool import_ok = false;
 	string written_file;
 
@@ -275,7 +269,7 @@ UID ModuleResources::ImportTexture(const char* file_name, bool compressed, bool 
 	return ret;
 }
 
-UID ModuleResources::ImportSuccess(Resource::Type type, const char* file_name, const std::string& output)
+unsigned long long ModuleResources::ImportSuccess(Resource::Type type, const char* file_name, const std::string& output)
 {
 	Resource* res = CreateNewResource(type);
 	res->file = file_name;
@@ -301,9 +295,9 @@ UID ModuleResources::ImportSuccess(Resource::Type type, const char* file_name, c
 	return res->uid;
 }
 
-UID ModuleResources::ImportBuffer(const void * buffer, uint size, Resource::Type type, const char* source_file)
+unsigned long long ModuleResources::ImportBuffer(const void * buffer, unsigned int size, Resource::Type type, const char* source_file)
 {
-	UID ret = 0;
+	unsigned long long ret = 0;
 
 	bool import_ok = false;
 	string output;
@@ -318,11 +312,6 @@ UID ModuleResources::ImportBuffer(const void * buffer, uint size, Resource::Type
 		// Old school trick: if it is a Mesh, buffer will be treated as an AiMesh*
 		// TODO: this can go bad in so many ways :)
 		// \todo: import_ok = App->meshes->Import((aiMesh*) buffer, output);
-
-		break;
-	case Resource::animation:
-		import_ok = anim_loader->Import((aiAnimation*)buffer, (UID)size, output);
-		break;
 	}
 
 	// If export was successfull, create a new resource
@@ -345,32 +334,32 @@ UID ModuleResources::ImportBuffer(const void * buffer, uint size, Resource::Type
 	return ret;
 }
 
-UID ModuleResources::GenerateNewUID()
+unsigned long long ModuleResources::GenerateNewUID()
 {
 	++last_uid;
 	SaveUID();
 	return last_uid;
 }
 
-const Resource * ModuleResources::Get(UID uid) const
+const Resource * ModuleResources::Get(unsigned long long uid) const
 {
 	if (resources.find(uid) != resources.end())
 		return resources.at(uid);
 	return nullptr;
 }
 
-Resource * ModuleResources::Get(UID uid)
+Resource * ModuleResources::Get(unsigned long long uid)
 {
-	std::map<UID, Resource*>::iterator it = resources.find(uid);
+	std::map<unsigned long long, Resource*>::iterator it = resources.find(uid);
 	if (it != resources.end())
 		return it->second;
 	return nullptr;
 }
 
-Resource * ModuleResources::CreateNewResource(Resource::Type type, UID force_uid)
+Resource * ModuleResources::CreateNewResource(Resource::Type type, unsigned long long force_uid)
 {
 	Resource* ret = nullptr;
-	UID uid;
+	unsigned long long uid;
 
 	if (force_uid != 0 && Get(force_uid) == nullptr)
 		uid = force_uid;
@@ -384,12 +373,6 @@ Resource * ModuleResources::CreateNewResource(Resource::Type type, UID force_uid
 		break;
 	case Resource::mesh:
 		ret = (Resource*) new ResourceMesh(uid);
-		break;
-	case Resource::audio:
-		ret = (Resource*) new ResourceAudio(uid);
-		break;
-	case Resource::animation:
-		ret = (Resource*) new ResourceAnimation(uid);
 		break;
 	case Resource::material:
 		ret = new ResourceMaterial(uid);
@@ -409,7 +392,7 @@ Resource * ModuleResources::CreateNewResource(Resource::Type type, UID force_uid
 
 void ModuleResources::GatherResourceType(std::vector<const Resource*>& resources, Resource::Type type) const
 {
-	for (map<UID, Resource*>::const_iterator it = this->resources.begin(); it != this->resources.end(); ++it)
+	for (map<unsigned long long, Resource*>::const_iterator it = this->resources.begin(); it != this->resources.end(); ++it)
 	{
 		if (it->second->type == type)
 			resources.push_back(it->second);
@@ -427,11 +410,11 @@ void ModuleResources::LoadUID()
 	file += LAST_UID_FILE;
 
 	char *buf = nullptr;
-	uint size = App->fs->Load(file.c_str(), &buf);
+	unsigned int size = App->fs->Load(file.c_str(), &buf);
 
 	if (size == sizeof(last_uid))
 	{
-		last_uid = *((UID*)buf);
+		last_uid = *((unsigned long long*)buf);
 		RELEASE_ARRAY(buf);
 	}
 	else
@@ -446,15 +429,15 @@ void ModuleResources::SaveUID() const
 	string file(SETTINGS_FOLDER);
 	file += LAST_UID_FILE;
 
-	uint size = App->fs->Save(file.c_str(), (const char*)&last_uid, sizeof(last_uid));
+	unsigned int size = App->fs->Save(file.c_str(), (const char*)&last_uid, sizeof(last_uid));
 
 	if (size != sizeof(last_uid))
 		LOG("WARNING! Cannot write resource UID into file [%s]", file.c_str());
 }
 
-void ModuleResources::RemoveResource(UID uid)
+void ModuleResources::RemoveResource(unsigned long long uid)
 {
-	map<UID, Resource*>::iterator it = resources.find(uid);
+	map<unsigned long long, Resource*>::iterator it = resources.find(uid);
 	if (it != resources.end())
 	{
 		App->fs->Remove(it->second->GetExportedFile());
