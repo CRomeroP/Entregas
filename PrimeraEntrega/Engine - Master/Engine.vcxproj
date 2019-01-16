@@ -79,6 +79,7 @@
     <ClInclude Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Brofiler\include\Brofiler.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\GL\gl3w.h" />
     <ClInclude Include="ImGui\GL\glcorearb.h" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImGui\GL\gl3w.c" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />

@@ -78,6 +78,7 @@
     <ClCompile Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">
