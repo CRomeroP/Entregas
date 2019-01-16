@@ -4,7 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleTextures.h"
 #include "Event.h"
-//#include "ResourceTexture.h"
+#include "ResourceTexture.h"
 //#include "ResourceMaterial.h"
 #include "ResourceMesh.h"
 //#include "ResourceModel.h"
