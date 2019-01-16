@@ -3,7 +3,7 @@
 
 #include "Globals.h"
 #include "Module.h"
-#include "Math.h"
+#include "MathGeoLib.h"
 #include "QuadTree.h"
 
 class GameObject;
@@ -12,12 +12,12 @@ class SpotLight;
 class DirLight;
 class AmbientLight;
 
-class ModuleLevelManager : public Module
+class ModuleScene : public Module
 {
 public:
 
-	ModuleLevelManager(bool start_enabled = true);
-	~ModuleLevelManager();
+	ModuleScene(bool start_enabled = true);
+	~ModuleScene();
 
 	bool Init(Config* config = nullptr);
 	bool Start(Config* config = nullptr);

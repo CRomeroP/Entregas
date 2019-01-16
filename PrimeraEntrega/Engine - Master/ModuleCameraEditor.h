@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib.h"
+#include "Config.h"
 
 class ComponentCamera;
 class GameObject;
@@ -14,8 +15,8 @@ public:
 	ModuleCameraEditor();
 	~ModuleCameraEditor();
 
-	bool Init();
-	bool Start();
+	bool Init(Config* config = nullptr);
+	bool Start(Config* config = nullptr);
 	update_status Update();
 	bool CleanUp();
 	
