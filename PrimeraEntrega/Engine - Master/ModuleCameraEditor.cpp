@@ -10,6 +10,8 @@
 #include "utils/debug_draw.hpp"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "MathGeoLib.h"
+#include "SDL/include/SDL.h"
 #include <vector>
 
 #include "mmgr/mmgr.h"
@@ -19,7 +21,7 @@
 
 
 
-ModuleCameraEditor::ModuleCameraEditor()
+ModuleCameraEditor::ModuleCameraEditor(bool enabled) :  enable(enabled)
 {
 	cam = new ComponentCamera(nullptr);
 	selector = LineSegment(float3::zero, float3::unitY);
@@ -51,7 +53,7 @@ bool ModuleCameraEditor::Start(Config* config)
 
 update_status ModuleCameraEditor::Update()
 {
-	Frustrum* frustum = &cam->frustum;
+	Frustum* frustum = &cam->frustum;
 	return update_status();
 }
 
@@ -69,9 +71,9 @@ ComponentCamera * ModuleCameraEditor::getCam()
 	return nullptr;
 }
 
-void ModuleCameraEditor::Move()
+void ModuleCameraEditor::Movement()
 {
-	Frustum* frustum = &dummy->frustum;
+	Frustum* frustum = &cam->frustum;
 
 	float adjusted_speed = mov_speed;
 

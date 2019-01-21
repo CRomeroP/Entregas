@@ -17,7 +17,7 @@ public:
 		material,
 		texture,
 		mesh,
-		unkown
+		unknown
 	
 	};
 
@@ -55,7 +55,7 @@ protected:
 	std::string exported_file;
 	std::string user_name;
 
-	Type type = unkown;
+	Type type = unknown;
 	unsigned int loaded = 0;
 };
 

@@ -6,7 +6,7 @@
 #include "Config.h"
 
 #include "ModuleRender.h"
-#include "ModuleEditorCamera.h"
+#include "ModuleCamera.h"
 #include "ModuleImGui.h"
 #include "ModuleResources.h"
 
@@ -23,19 +23,19 @@
 
 using namespace std;
 
-ModuleLevelManager::ModuleLevelManager(bool start_enabled) : Module("LevelManager", start_enabled)
+ModuleScene::ModuleScene(bool start_enabled) : Module()
 {
 
 }
 
 // Destructor
-ModuleLevelManager::~ModuleLevelManager()
+ModuleScene::~ModuleScene()
 {
 	
 }
 
 // Called before render is available
-bool ModuleLevelManager::Init(Config* config)
+bool ModuleScene::Init(Config* config)
 {
 	bool ret = true;
 	LOG("Loading Level Manager");
@@ -47,7 +47,7 @@ bool ModuleLevelManager::Init(Config* config)
 	return ret;
 }
 
-bool ModuleLevelManager::Start(Config * config)
+bool ModuleScene::Start(Config * config)
 {
 	// Load a default map
 	Load("default.eduscene");
@@ -55,7 +55,7 @@ bool ModuleLevelManager::Start(Config * config)
 	return true;
 }
 
-update_status ModuleLevelManager::PreUpdate(float dt)
+update_status ModuleScene::PreUpdate(float dt)
 {
 	DestroyFlaggedGameObjects();
 	// Update transformations tree for this frame
@@ -65,16 +65,15 @@ update_status ModuleLevelManager::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleLevelManager::Update(float dt)
+update_status ModuleScene::Update(float dt)
 {
-	if (App->IsPlay())
-		RecursiveUpdate(root, dt);
+	RecursiveUpdate(root, dt);
 
 	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
-bool ModuleLevelManager::CleanUp()
+bool ModuleScene::CleanUp()
 {
 	LOG("Freeing Level Manager");
 
@@ -86,22 +85,22 @@ bool ModuleLevelManager::CleanUp()
 	return true;
 }
 
-void ModuleLevelManager::ReceiveEvent(const Event & event)
+void ModuleScene::ReceiveEvent(const Event & event)
 {
 	RecursiveProcessEvent(root, event);
 }
 
-const GameObject * ModuleLevelManager::GetRoot() const
+const GameObject * ModuleScene::GetRoot() const
 {
 	return root;
 }
 
-GameObject * ModuleLevelManager::GetRoot()
+GameObject * ModuleScene::GetRoot()
 {
 	return root;
 }
 
-const GameObject * ModuleLevelManager::Find(unsigned int uid) const
+const GameObject * ModuleScene::Find(unsigned int uid) const
 {
 	if (uid > 0)
 		return RecursiveFind(uid, root);
@@ -109,7 +108,7 @@ const GameObject * ModuleLevelManager::Find(unsigned int uid) const
 	return nullptr;
 }
 
-GameObject * ModuleLevelManager::Find(unsigned int uid)
+GameObject * ModuleScene::Find(unsigned int uid)
 {
 	if (uid > 0)
 		return RecursiveFind(uid, root);
@@ -117,20 +116,20 @@ GameObject * ModuleLevelManager::Find(unsigned int uid)
 	return nullptr;
 }
 
-bool ModuleLevelManager::CreateNewEmpty(const char * name)
+bool ModuleScene::CreateNewEmpty(const char * name)
 {
 	UnloadCurrent();
 	return false;
 }
 
-GameObject * ModuleLevelManager::CreateGameObject(GameObject * parent, const float3 & pos, const float3 & scale, const Quat & rot, const char * name)
+GameObject * ModuleScene::CreateGameObject(GameObject * parent, const float3 & pos, const float3 & scale, const Quat & rot, const char * name)
 {
 	GameObject* ret = new GameObject(parent, name, pos, scale, rot);
 
 	return ret;
 }
 
-GameObject * ModuleLevelManager::CreateGameObject(GameObject * parent)
+GameObject * ModuleScene::CreateGameObject(GameObject * parent)
 {
 	if (parent == nullptr)
 		parent = root;
@@ -138,7 +137,7 @@ GameObject * ModuleLevelManager::CreateGameObject(GameObject * parent)
 	return new GameObject(parent, "Unnamed");
 }
 
-GameObject * ModuleLevelManager::Duplicate(const GameObject * original)
+GameObject * ModuleScene::Duplicate(const GameObject * original)
 {
 	GameObject* ret = nullptr;
 
@@ -155,7 +154,7 @@ GameObject * ModuleLevelManager::Duplicate(const GameObject * original)
 	return ret;
 }
 
-void ModuleLevelManager::DestroyFlaggedGameObjects()
+void ModuleScene::DestroyFlaggedGameObjects()
 {
 	// we never really have to remove root, but we remove all its childs
 	if (root->remove == true)
@@ -176,7 +175,7 @@ void ModuleLevelManager::DestroyFlaggedGameObjects()
 	}
 }
 
-void ModuleLevelManager::LoadGameObjects(const Config & config)
+void ModuleScene::LoadGameObjects(const Config & config)
 {
 	int count = config.GetArrayCount("Game Objects");
 	map<GameObject*, unsigned int> relations;
@@ -210,7 +209,7 @@ void ModuleLevelManager::LoadGameObjects(const Config & config)
 }
 
 
-bool ModuleLevelManager::Load(const char * file)
+bool ModuleScene::Load(const char * file)
 {
 	bool ret = false;
 
@@ -242,7 +241,7 @@ bool ModuleLevelManager::Load(const char * file)
 	return ret;
 }
 
-bool ModuleLevelManager::Save(const char * file)
+bool ModuleScene::Save(const char * file)
 {
 	bool ret = true;
 
@@ -271,11 +270,11 @@ bool ModuleLevelManager::Save(const char * file)
 	return ret;
 }
 
-void ModuleLevelManager::UnloadCurrent()
+void ModuleScene::UnloadCurrent()
 {
 }
 
-void ModuleLevelManager::RecursiveProcessEvent(GameObject * go, const Event & event) const
+void ModuleScene::RecursiveProcessEvent(GameObject * go, const Event & event) const
 {
 	switch (event.type)
 	{
@@ -290,7 +289,7 @@ void ModuleLevelManager::RecursiveProcessEvent(GameObject * go, const Event & ev
 		RecursiveProcessEvent(*it, event);
 }
 
-void ModuleLevelManager::RecursiveUpdate(GameObject * go, float dt) const
+void ModuleScene::RecursiveUpdate(GameObject * go, float dt) const
 {
 	go->OnUpdate(dt);
 
@@ -298,7 +297,7 @@ void ModuleLevelManager::RecursiveUpdate(GameObject * go, float dt) const
 		RecursiveUpdate(*it, dt);
 }
 
-GameObject* ModuleLevelManager::RecursiveFind(unsigned int uid, GameObject * go) const
+GameObject* ModuleScene::RecursiveFind(unsigned int uid, GameObject * go) const
 {
 	if (uid == go->GetUID())
 		return go;
@@ -311,7 +310,7 @@ GameObject* ModuleLevelManager::RecursiveFind(unsigned int uid, GameObject * go)
 	return ret;
 }
 
-GameObject * ModuleLevelManager::Validate(const GameObject * pointer) const
+GameObject * ModuleScene::Validate(const GameObject * pointer) const
 {
 	if (pointer == root)
 		return root;
@@ -323,7 +322,7 @@ GameObject * ModuleLevelManager::Validate(const GameObject * pointer) const
 	return nullptr;
 }
 
-GameObject* ModuleLevelManager::CastRay(const LineSegment& segment, float& dist) const
+GameObject* ModuleScene::CastRay(const LineSegment& segment, float& dist) const
 {
 	dist = inf;
 	GameObject* candidate = nullptr;
@@ -331,7 +330,7 @@ GameObject* ModuleLevelManager::CastRay(const LineSegment& segment, float& dist)
 	return candidate;
 }
 
-void ModuleLevelManager::RecursiveTestRayBBox(const LineSegment & segment, float & dist, float3 & normal, GameObject ** best_candidate) const
+void ModuleScene::RecursiveTestRayBBox(const LineSegment & segment, float & dist, float3 & normal, GameObject ** best_candidate) const
 {
 	map<float, GameObject*> objects;
 	quadtree.CollectIntersections(objects, segment);
@@ -361,7 +360,7 @@ void ModuleLevelManager::RecursiveTestRayBBox(const LineSegment & segment, float
 	}
 }
 
-void ModuleLevelManager::RecursiveTestRay(const LineSegment& segment, float& dist, GameObject** best_candidate) const
+void ModuleScene::RecursiveTestRay(const LineSegment& segment, float& dist, GameObject** best_candidate) const
 {
 	map<float, GameObject*> objects;
 	quadtree.CollectIntersections(objects, segment);
@@ -404,7 +403,7 @@ void ModuleLevelManager::RecursiveTestRay(const LineSegment& segment, float& dis
 	}
 }
 
-GameObject* ModuleLevelManager::CastRay(const Ray & ray, float& dist) const
+GameObject* ModuleScene::CastRay(const Ray & ray, float& dist) const
 {
 	dist = inf;
 	GameObject* candidate = nullptr;
@@ -412,7 +411,7 @@ GameObject* ModuleLevelManager::CastRay(const Ray & ray, float& dist) const
 	return candidate;
 }
 
-GameObject * ModuleLevelManager::CastRayOnBoundingBoxes(const LineSegment & segment, float & dist, float3 & normal) const
+GameObject * ModuleScene::CastRayOnBoundingBoxes(const LineSegment & segment, float & dist, float3 & normal) const
 {
 	dist = inf;
 	normal = float3::zero;
@@ -421,7 +420,7 @@ GameObject * ModuleLevelManager::CastRayOnBoundingBoxes(const LineSegment & segm
 	return candidate;
 }
 
-void ModuleLevelManager::RecursiveTestRay(const Ray& ray, float& dist, GameObject** best_candidate) const
+void ModuleScene::RecursiveTestRay(const Ray& ray, float& dist, GameObject** best_candidate) const
 {
 	map<float, GameObject*> objects;
 	quadtree.CollectIntersections(objects, ray);
@@ -468,12 +467,12 @@ void ModuleLevelManager::RecursiveTestRay(const Ray& ray, float& dist, GameObjec
 	}
 }
 
-void ModuleLevelManager::FindNear(const float3 & position, float radius, std::vector<GameObject*>& results) const
+void ModuleScene::FindNear(const float3 & position, float radius, std::vector<GameObject*>& results) const
 {
 	quadtree.CollectIntersections(results, Sphere(position, radius));
 }
 
-GameObject* ModuleLevelManager::AddModel(unsigned long long id)
+GameObject* ModuleScene::AddModel(unsigned long long id)
 {
 	Resource* res = App->resources->Get(id);
 

@@ -106,3 +106,39 @@ LCG & Application::Random()
 {
 	return *random;
 }
+
+const char* Application::GetAppName() const
+{
+	return appName.c_str();
+}
+
+// ---------------------------------------------
+void Application::SetAppName(const char * name)
+{
+	if (name != nullptr && name != appName)
+	{
+		appName = name;
+		window->SetTitle(name);
+		// TODO: Filesystem should adjust its writing folder
+	}
+}
+
+const char* Application::GetOrganizationName() const
+{
+	return organization.c_str();
+}
+
+void Application::SetOrganizationName(const char * name)
+{
+	if (name != nullptr && name != organization)
+	{
+		organization= name;
+		// TODO: Filesystem should adjust its writing folder
+	}
+}
+
+void Application::BroadcastEvent(const Event& event)
+{
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+		(*it)->EventResolve(event);
+}

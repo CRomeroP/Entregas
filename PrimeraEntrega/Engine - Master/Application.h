@@ -3,6 +3,7 @@
 #include<list>
 #include "Globals.h"
 #include "Module.h"
+#include "Event.h"
 #include "MathGeoLib/include/Algorithm/Random/LCG.h"
 
 class ModuleRender;
@@ -16,6 +17,7 @@ class ModuleModelLoader;
 class ModuleImGui;
 class ModuleFileSystem;
 class ModuleResources;
+class ModuleScene;
 
 class Application
 {
@@ -38,6 +40,13 @@ public:
 
 	LCG& Random();
 
+	void BroadcastEvent(const Event& event);
+
+	const char* GetAppName() const;
+	void SetAppName(const char* name);
+	const char* GetOrganizationName() const;
+	void SetOrganizationName(const char* name);
+
 public:
 
 	LCG* random = nullptr;
@@ -53,8 +62,10 @@ public:
 	ModuleImGui* imgui = nullptr;
 	ModuleFileSystem* fs = nullptr;
 	ModuleResources* resources = nullptr;
+	ModuleScene* level = nullptr;
 
 	std::string appName = "";
+	std::string organization;
 
 	int framerateCap = 60;
 

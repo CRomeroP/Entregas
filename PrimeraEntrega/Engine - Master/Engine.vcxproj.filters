@@ -75,10 +75,28 @@
     <ClCompile Include="PanelConfiguration.cpp" />
     <ClCompile Include="PanelHardware.cpp" />
     <ClCompile Include="PanelGOTree.cpp" />
-    <ClCompile Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.cpp">
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Component.cpp">
       <Filter>GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="Config.cpp" />
+    <ClCompile Include="parson.c" />
+    <ClCompile Include="ResourceMesh.cpp" />
+    <ClCompile Include="ModuleFileSystem.cpp" />
+    <ClCompile Include="ModuleResources.cpp" />
+    <ClCompile Include="ResourceTexture.cpp" />
+    <ClCompile Include="HashString.cpp" />
+    <ClCompile Include="ResourceMaterial.cpp" />
+    <ClCompile Include="ResourceModel.cpp" />
+    <ClCompile Include="ComponentMaterial.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="ModuleScene.cpp" />
+    <ClCompile Include="ModuleCameraEditor.cpp" />
+    <ClCompile Include="ModuleHints.cpp" />
+    <ClCompile Include="Viewport.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -102,7 +120,6 @@
     <ClInclude Include="MathGeoLib\include\Geometry\Plane.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Polygon.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Polyhedron.h" />
-    <ClInclude Include="MathGeoLib\include\Geometry\QuadTree.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Ray.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Sphere.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Triangle.h" />
@@ -198,10 +215,29 @@
     <ClInclude Include="PanelConfiguration.h" />
     <ClInclude Include="PanelHardware.h" />
     <ClInclude Include="PanelGOTree.h" />
-    <ClInclude Include="..\..\..\..\Edu-Game-Engine-master\Source\Component.h">
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Component.h">
       <Filter>GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="parson.h" />
+    <ClInclude Include="ResourceMesh.h" />
+    <ClInclude Include="ModuleFileSystem.h" />
+    <ClInclude Include="ModuleResources.h" />
+    <ClInclude Include="ResourceTexture.h" />
+    <ClInclude Include="HashString.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="ResourceMaterial.h" />
+    <ClInclude Include="ResourceModel.h" />
+    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="ModuleScene.h" />
+    <ClInclude Include="ModuleCameraEditor.h" />
+    <ClInclude Include="ModuleHints.h" />
+    <ClInclude Include="Viewport.h" />
+    <ClInclude Include="QuadTree.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">

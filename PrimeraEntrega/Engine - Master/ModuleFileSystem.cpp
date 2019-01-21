@@ -14,7 +14,7 @@
 
 using namespace std;
 
-ModuleFileSystem::ModuleFileSystem(const char* game_path) : Module("File System", true)
+ModuleFileSystem::ModuleFileSystem(const char* game_path) : Module()
 {
 	// needs to be created before Init so other modules can use it
 	char* base_path = SDL_GetBasePath();
@@ -92,13 +92,12 @@ bool ModuleFileSystem::CleanUp()
 // Add a new zip file or folder
 bool ModuleFileSystem::AddPath(const char* path_or_zip)
 {
-	bool ret = false;
+	bool ret = true;
 
-	if (PHYSFS_mount(path_or_zip, nullptr, 1) == 0) 
+	if (PHYSFS_mount(path_or_zip, nullptr, 1) == 0) {
 		LOG("File System error while adding a path or zip: %s\n", PHYSFS_getLastError());
-	else
-		ret = true;
-
+		ret = false;
+	}
 	return ret;
 }
 
@@ -341,11 +340,15 @@ unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsign
 	{
 		unsigned int written = (unsigned int)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
 		if (written != size)
+		{
 			LOG("File System error while writing to file %s: %s", file, PHYSFS_getLastError());
+		}
 		else
 		{
 			if (append == true)
+			{
 				LOG("Added %u data to [%s%s]", size, PHYSFS_getWriteDir(), file);
+			}
 			//else if(overwrite == true)
 				//LOG("File [%s%s] overwritten with %u bytes", PHYSFS_getWriteDir(), file, size);
 			else if (overwrite == false)

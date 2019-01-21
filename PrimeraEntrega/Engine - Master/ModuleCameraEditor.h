@@ -12,7 +12,7 @@ class GameObject;
 class ModuleCameraEditor :public Module
 {
 public:
-	ModuleCameraEditor();
+	ModuleCameraEditor(bool enabled = true);
 	~ModuleCameraEditor();
 
 	bool Init(Config* config = nullptr);

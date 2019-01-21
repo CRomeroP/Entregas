@@ -3,8 +3,8 @@
 
 #include "Globals.h"
 #include "Component.h"
-#include "Math.h"
-#include "Color.h"
+#include "MathGeoLib.h"
+
 
 class ComponentCamera : public Component
 {

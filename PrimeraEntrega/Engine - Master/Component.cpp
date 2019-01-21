@@ -40,7 +40,7 @@ Component::TypeComponent Component::GetType() const
 // ---------------------------------------------------------
 const char * Component::GetTypeStr() const
 {
-	assert(Component::TypeComponent::Unknown == 4, "String list needs update");
+	assert(Component::TypeComponent::Unknown == 4);
 
 	static const char* names[] = {
 	"Mesh",
